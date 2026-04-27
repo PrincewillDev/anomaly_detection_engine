@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - HNG-nginx-logs:/var/log/nginx
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - nginx-nextcloud
+
+  nextcloud:
+    image: kefaslungu/hng-nextcloud
+    networks:
+      - nginx-nextcloud
+    
+  detector:
+    build: ./detector
+    volumes:
+      - HNG-nginx-logs:/var/log/nginx:ro
+    depends_on:
+      - nginx
+    networks:
+      - nginx-nextcloud
+    cap_add:
+      - NET_ADMIN
+
+
+volumes:
+  HNG-nginx-logs:
+
+networks:
+  nginx-nextcloud:
+    driver: bridge

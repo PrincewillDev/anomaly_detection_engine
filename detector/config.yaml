@@ -1,0 +1,36 @@
+# Log Monitoring
+log:
+  path: /var/log/nginx/hng-access.log
+  audit_path: /var/log/detection/audit.log
+
+# Sliding window
+window:
+  size_seconds: 60
+
+# Baseline
+baseline:
+  rolling_window_minutes: 30
+  recalculate_interval_seconds: 60
+
+# Detection threshold
+detection:
+  z_score_threshold: 3.0
+  rate_multiplier_threshold: 5
+  error_surge_multiplier: 3
+
+# Ban durations in seconds
+blocking:
+  durations_seconds:
+  - 600
+  - 1800
+  - 7200
+  - -1
+
+# slack
+slack:
+  webhook_url: "https://hooks.slack.com/services/your/webhook/url"
+
+# Dashboard
+dashboard:
+  port: 8080
+  refresh_seconds: 3
