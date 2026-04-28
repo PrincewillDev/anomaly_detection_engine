@@ -4,6 +4,7 @@
 import subprocess
 import threading
 import time
+from datetime import datetime, timezone
 
 
 class Unbanner:
@@ -23,8 +24,9 @@ class Unbanner:
         self._blocker = blocker
         self._notifier = notifier
         self._durations = config.get('blocking', {}).get(
-            'durations_seconds', ...
+            'durations_seconds', [600, 1800, 7200, -1]
         )
+        self._audit_path = config.get('log', {}).get('audit_path', '/var/log/detector/audit.log')
 
     def _next_duration(self, ban_count: int) -> int:
         """Return the next escalated ban duration for an IP with ban_count prior bans."""
@@ -56,6 +58,9 @@ class Unbanner:
                     del self._blocker.banned_ips[ip]
                     next_duration = self._next_duration(ban_count)
                     self._notifier.send_unban_alert(ip, next_duration)
+                    with open(self._audit_path, 'a') as f:
+                        ts = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                        f.write(f'[{ts}] UNBAN {ip} | next_duration={next_duration}\n')
 
             time.sleep(30)
 
