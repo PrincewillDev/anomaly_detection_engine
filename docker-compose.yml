@@ -19,6 +19,8 @@ services:
   detector:
     build: ./detector
     network_mode: host
+    cap_add:
+      - NET_ADMIN
     volumes:
       - HNG-nginx-logs:/var/log/nginx:ro
     depends_on:
