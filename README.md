@@ -84,10 +84,10 @@ A third condition modifies the z-score threshold rather than triggering a ban di
 iptables is the Linux kernel's built-in packet filtering firewall. When the detector decides to block an IP, it runs the following command inside the container:
 
 ```
-iptables -I INPUT -s <ip> -j DROP
+iptables -I DOCKER-USER -s <ip> -j DROP
 ```
 
-The `-I INPUT` flag inserts the rule at the top of the INPUT chain, so it is evaluated before any other rules. The `-s <ip>` flag matches packets from the specified source address. The `-j DROP` target silently discards the packet without sending any response to the sender.
+The `-I DOCKER-USER` flag inserts the rule at the top of the `DOCKER-USER` chain, which Docker processes before its own forwarding rules, ensuring traffic from a blocked IP is dropped even for containerised services. The `-s <ip>` flag matches packets from the specified source address. The `-j DROP` target silently discards the packet without sending any response to the sender.
 
 The system applies escalating ban durations based on how many times an IP has been banned before:
 
@@ -101,7 +101,7 @@ The system applies escalating ban durations based on how many times an IP has be
 A background thread checks every 30 seconds whether any active ban has expired. When a ban expires, the rule is removed with:
 
 ```
-iptables -D INPUT -s <ip> -j DROP
+iptables -D DOCKER-USER -s <ip> -j DROP
 ```
 
 The IP is then removed from the in-memory ban registry. A Slack alert is sent noting the next ban duration that will apply if the IP re-offends. Permanent bans are never automatically lifted.
@@ -134,7 +134,7 @@ newgrp docker
 **2. Clone the repository**
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/PrincewillDev/anomaly_detection_engine.git
 cd anomaly_detection_engine
 ```
 
@@ -193,12 +193,12 @@ Anomaly detection engine started. Monitoring: /var/log/nginx/hng-access.log
 Dashboard running on http://0.0.0.0:8080
 ```
 
-To confirm the dashboard is accessible, open a browser and navigate to `http://<your-server-ip>:8080`. You should see a plain HTML page showing uptime, global request rate, baseline mean and stddev, the top 10 source IPs, any currently banned IPs, and CPU and memory usage. The page refreshes automatically every 3 seconds.
+To confirm the dashboard is accessible, open a browser and navigate to `http://monitor.servehttp.com`. You should see a plain HTML page showing uptime, global request rate, baseline mean and stddev, the top 10 source IPs, any currently banned IPs, and CPU and memory usage. The page refreshes automatically every 3 seconds.
 
 To generate test traffic and confirm the detector is processing entries, run:
 
 ```bash
-curl http://<your-server-ip>/
+curl http://178.105.31.108/
 ```
 
 The global request count on the dashboard should increment with each request.
@@ -207,14 +207,14 @@ The global request count on the dashboard should increment with each request.
 
 ## Live URLs
 
-- **Application (Nginx / Nextcloud):** `http://<your-server-ip>/`
-- **Detector Dashboard:** `http://<your-server-ip>:8080`
+- **Application (Nginx / Nextcloud):** `http://178.105.31.108/`
+- **Detector Dashboard:** `http://monitor.servehttp.com`
 
 ---
 
 ## GitHub Repository
 
-Repository: `<repository-url>`
+Repository: `https://github.com/PrincewillDev/anomaly_detection_engine`
 
 ---
 
@@ -222,4 +222,4 @@ Repository: `<repository-url>`
 
 A detailed write-up covering the design decisions, anomaly detection theory, and lessons learned during this project is available at:
 
-`<blog-post-url>`
+`https://dev.to/princewilldev/how-i-built-a-real-time-ddos-detection-engine-from-scratch-and-what-i-learned-g9h`

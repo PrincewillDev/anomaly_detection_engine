@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mmdc --version)",
+      "Bash(npx --version)",
+      "Bash(npx --yes @mermaid-js/mermaid-cli -i docs/architecture.mmd -o docs/architecture.png -b white)",
+      "Bash(npm cache *)"
+    ]
+  }
+}
