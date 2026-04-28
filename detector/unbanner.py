@@ -40,7 +40,7 @@ class Unbanner:
                 ['iptables', '-D', 'INPUT', '-s', ip, '-j', 'DROP'],
                 check=True,
             )
-        except subprocess.CalledProcessError as e:
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
             print(f"Failed to unban {ip}: {e}")
 
     def _check_loop(self) -> None:

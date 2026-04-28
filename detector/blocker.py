@@ -28,7 +28,7 @@ class Blocker:
                 ['iptables', '-I', 'INPUT', '-s', ip, '-j', 'DROP'],
                 check=True,
             )
-        except subprocess.CalledProcessError as e:
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
             print(f"Failed to block {ip}: {e}")
             return
 
