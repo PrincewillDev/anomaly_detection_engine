@@ -26,6 +26,8 @@ services:
       - nginx-nextcloud
     cap_add:
       - NET_ADMIN
+    environment:
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
 
 
 volumes:

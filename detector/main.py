@@ -17,8 +17,15 @@ from notifier import Notifier
 from unbanner import Unbanner
 
 
+def _env_constructor(loader, node) -> str:
+    """Resolve !ENV tags by reading the named environment variable."""
+    return os.getenv(loader.construct_scalar(node), '')
+
+yaml.add_constructor('!ENV', _env_constructor, Loader=yaml.SafeLoader)
+
+
 def load_config(path: str = 'config.yaml') -> dict:
-    """Load and return the YAML config file."""
+    """Load and return the YAML config file, resolving !ENV tags from the environment."""
     with open(path, 'r') as f:
         return yaml.safe_load(f)
 
