@@ -25,7 +25,7 @@ class Blocker:
         """
         try:
             subprocess.run(
-                ['iptables', '-I', 'INPUT', '-s', ip, '-j', 'DROP'],
+                ['iptables', '-I', 'DOCKER-USER', '-s', ip, '-j', 'DROP'],
                 check=True,
             )
         except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:

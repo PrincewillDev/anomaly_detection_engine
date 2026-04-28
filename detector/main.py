@@ -73,6 +73,8 @@ def main() -> None:
     per_second_count = 0
     last_tick = time.time()
     last_baseline_log = 0.0
+    last_global_alert = 0.0
+    global_alert_cooldown = 60.0
 
     print(f'Anomaly detection engine started. Monitoring: {log_path}')
 
@@ -95,13 +97,14 @@ def main() -> None:
                     )
                     last_baseline_log = now
 
-                # Global rate anomaly check
+                # Global rate anomaly check (rate-limited to once per 60s)
                 mean, stddev = baseline.get_baseline()
                 global_rate = len(detector._global_window)
                 global_z = (global_rate - mean) / stddev
-                if global_z > z_threshold:
+                if global_z > z_threshold and (now - last_global_alert) >= global_alert_cooldown:
                     condition = f'global z_score {global_z:.2f} exceeds threshold {z_threshold}'
                     notifier.send_global_alert(global_rate, mean, condition)
+                    last_global_alert = now
 
             result = detector.process_entry(log_entry)
 

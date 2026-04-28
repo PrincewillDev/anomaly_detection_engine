@@ -37,7 +37,7 @@ class Unbanner:
         """Remove iptables DROP rule for ip."""
         try:
             subprocess.run(
-                ['iptables', '-D', 'INPUT', '-s', ip, '-j', 'DROP'],
+                ['iptables', '-D', 'DOCKER-USER', '-s', ip, '-j', 'DROP'],
                 check=True,
             )
         except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:

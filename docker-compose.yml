@@ -18,16 +18,11 @@ services:
     
   detector:
     build: ./detector
-    ports:
-      - "8080:8080"
+    network_mode: host
     volumes:
       - HNG-nginx-logs:/var/log/nginx:ro
     depends_on:
       - nginx
-    networks:
-      - nginx-nextcloud
-    cap_add:
-      - NET_ADMIN
     environment:
       - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
 
