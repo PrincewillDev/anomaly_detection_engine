@@ -1,4 +1,4 @@
-# HNG Stage 3 Anomaly Detection Engine
+# Anomaly Detection Engine
 
 This project is a real-time network anomaly detection system that monitors incoming HTTP traffic to a Nginx reverse proxy, detects abnormal request patterns from individual IP addresses, and automatically blocks offending IPs using iptables firewall rules. It runs entirely in Docker, requires no external database, and exposes a live dashboard showing traffic metrics, banned IPs, and system resource usage. When an anomaly is detected, a Slack alert is sent with full details about the offending IP, the trigger condition, and the applied ban duration.
 
