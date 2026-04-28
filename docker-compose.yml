@@ -18,6 +18,8 @@ services:
     
   detector:
     build: ./detector
+    ports:
+      - "8080:8080"
     volumes:
       - HNG-nginx-logs:/var/log/nginx:ro
     depends_on:

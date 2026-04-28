@@ -26,7 +26,7 @@ class Unbanner:
         self._durations = config.get('blocking', {}).get(
             'durations_seconds', [600, 1800, 7200, -1]
         )
-        self._audit_path = config.get('log', {}).get('audit_path', '/var/log/detector/audit.log')
+        self._audit_path = config.get('log', {}).get('audit_path', '/var/log/detection/audit.log')
 
     def _next_duration(self, ban_count: int) -> int:
         """Return the next escalated ban duration for an IP with ban_count prior bans."""

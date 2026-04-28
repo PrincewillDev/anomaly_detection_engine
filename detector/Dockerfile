@@ -7,9 +7,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN useradd -r -s /bin/false appuser
-USER appuser
+RUN useradd -r -s /bin/false appuser && \
+    mkdir -p /var/log/detection && \
+    chown appuser /var/log/detection
 
-RUN mkdir -p /var/log/detector
+USER appuser
 
 CMD ["python", "main.py"]
